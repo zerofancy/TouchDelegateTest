@@ -3,16 +3,23 @@ package top.ntutn.touchdelegatedemo
 import android.graphics.Rect
 import android.os.Build
 import android.view.MotionEvent
-import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 
-class TouchDelegateAdapter(private val parent: ViewGroup): TouchDelegate(Rect(), parent) {
-    private val delegateList = mutableListOf<TouchDelegateCompat>()
+class TouchDelegateAdapter(private val parent: ViewGroup): TouchDelegateCompat(Rect(), parent) {
+    private val delegateSet = mutableSetOf<TouchDelegateCompat>()
 
     fun addDelegate(delegate: TouchDelegateCompat) {
-        delegateList.add(delegate)
+        delegate.let {
+            if (it is TouchDelegateAdapter) {
+                it.delegateSet
+            } else {
+                listOf(it)
+            }
+        }.forEach {
+            delegateSet.add(it)
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -20,7 +27,7 @@ class TouchDelegateAdapter(private val parent: ViewGroup): TouchDelegate(Rect(),
         val x = event.x
         val y = event.y
 
-        delegateList.forEach {
+        delegateSet.forEach {
             val dView = it.delegateView
             if (dView.parent != parent || dView.visibility != View.VISIBLE) {
                 // 该View已经被移除或不可见
@@ -39,7 +46,7 @@ class TouchDelegateAdapter(private val parent: ViewGroup): TouchDelegate(Rect(),
         val x = event.x
         val y = event.y
 
-        delegateList.forEach {
+        delegateSet.forEach {
             val dView = it.delegateView
             if (dView.parent != parent || dView.visibility != View.VISIBLE) {
                 // 该View已经被移除

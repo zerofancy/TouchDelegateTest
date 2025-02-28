@@ -1,3 +1,9 @@
+import top.ntutn.buildsrc.CustomPlugin
+import top.ntutn.buildsrc.ManifestDemoPlugin
+
+apply<CustomPlugin>()
+apply<ManifestDemoPlugin>()
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
