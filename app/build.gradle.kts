@@ -1,7 +1,5 @@
-import top.ntutn.buildsrc.CustomPlugin
 import top.ntutn.buildsrc.ManifestDemoPlugin
 
-apply<CustomPlugin>()
 apply<ManifestDemoPlugin>()
 
 plugins {
